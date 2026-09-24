@@ -10,7 +10,10 @@
       "Bash(curl -s \"http://127.0.0.1:8010/search?q=Alesha%2C%20Who%20Smiles%20at%20Death\")",
       "Bash(curl -s http://127.0.0.1:8010/cards/7ae9ff8c-1cc8-4b10-9641-2c79648fd6c2)",
       "Bash(python -c ' *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(curl -s http://127.0.0.1:8010/)",
+      "Bash(curl -s http://127.0.0.1:8010/collection)"
     ]
   }
 }

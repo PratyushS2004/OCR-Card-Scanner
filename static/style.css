@@ -6,27 +6,38 @@
   line-height: 1.2;
 }
 
-/* Card-color-tinted background (card detail page) - each class only sets the
-   two shades; the actual `background` rule below picks light vs dark so the
-   light/dark toggle in base.html keeps working on top of it. */
-body.card-bg-w { --bg-light: #fbf8ee; --bg-dark: #2a2718; }
-body.card-bg-u { --bg-light: #e8f1fb; --bg-dark: #101f2e; }
-body.card-bg-b { --bg-light: #e9e6ec; --bg-dark: #1a1620; }
-body.card-bg-r { --bg-light: #fbebe8; --bg-dark: #2a1310; }
-body.card-bg-g { --bg-light: #eaf6ea; --bg-dark: #12261a; }
-body.card-bg-m { --bg-light: #faf3df; --bg-dark: #2a2211; }
-body.card-bg-c { --bg-light: #f2f2f2; --bg-dark: #1c1c1c; }
-
-body[class*="card-bg-"] {
-  background: var(--bg-light);
+/* Blurred card-art background (card detail page) - `--card-art-url` is set
+   inline per-page via templates/card.html's body_style block. The overlay
+   (::after) is what actually swaps with the light/dark toggle, same
+   explicit-attribute-wins / prefers-color-scheme-fallback pattern the
+   toggle itself uses. */
+body.has-card-art {
+  position: relative;
+}
+body.has-card-art::before {
+  content: "";
+  position: fixed;
+  inset: -60px; /* oversize past the blur radius so soft edges fall off-screen */
+  z-index: -2;
+  background-image: var(--card-art-url);
+  background-size: cover;
+  background-position: center;
+  filter: blur(50px) saturate(1.2);
+}
+body.has-card-art::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(255, 255, 255, 0.5);
   transition: background-color 0.3s ease;
 }
-html[data-theme="dark"] body[class*="card-bg-"] {
-  background: var(--bg-dark);
+html[data-theme="dark"] body.has-card-art::after {
+  background: rgba(10, 10, 14, 0.55);
 }
 @media (prefers-color-scheme: dark) {
-  html:not([data-theme="light"]) body[class*="card-bg-"] {
-    background: var(--bg-dark);
+  html:not([data-theme="light"]) body.has-card-art::after {
+    background: rgba(10, 10, 14, 0.55);
   }
 }
 

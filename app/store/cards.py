@@ -72,21 +72,12 @@ def _derived_fields(raw_json: str) -> dict:
     if not any(k in raw for k in ("power", "toughness", "loyalty")) and raw.get("card_faces"):
         face = raw["card_faces"][0]
 
-    colors = raw.get("colors")
-    if colors is None and raw.get("card_faces"):
-        # split cards/MDFCs often carry colors per-face instead of on the card itself
-        combined: list[str] = []
-        for face_data in raw["card_faces"]:
-            combined.extend(face_data.get("colors") or [])
-        colors = sorted(set(combined))
-
     return {
         "power": face.get("power"),
         "toughness": face.get("toughness"),
         "loyalty": face.get("loyalty"),
         "artist": raw.get("artist") or face.get("artist"),
         "scryfall_uri": raw.get("scryfall_uri"),
-        "colors": colors or [],
     }
 
 

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ card.name if card else "Card" }} - OCR Card Scanner{% endblock %}
-{% block body_class %}{% if card %}card-bg-{{ card.colors|color_class }}{% endif %}{% endblock %}
+{% block body_class %}{% if card and card.image_uri %}has-card-art{% endif %}{% endblock %}
+{% block body_style %}{% if card and card.image_uri %}--card-art-url: url('{{ card.image_uri }}'){% endif %}{% endblock %}
 {% block content %}
 {% if offline %}
 <p class="offline-notice">You're offline - connect to wifi to look up new cards.</p>

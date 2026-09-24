@@ -57,16 +57,6 @@ def pad_collector_number(number: str | None) -> str:
     return number.zfill(4) if number.isdigit() else number
 
 
-def color_class(colors: list[str] | None) -> str:
-    """Bucket a card's color list into one of the CSS background classes:
-    a single WUBRG letter, "m" for multicolor, or "c" for colorless."""
-    if not colors:
-        return "c"
-    if len(colors) > 1:
-        return "m"
-    return colors[0].lower()
-
-
 def mana_symbols(text: str | None) -> Markup:
     """Render {T}/{1}/{W/U}-style mana cost tokens as Scryfall's icon SVGs.
 
@@ -107,7 +97,6 @@ templates.env.filters["mana_symbols"] = mana_symbols
 templates.env.filters["strip_reminder_text"] = strip_reminder_text
 templates.env.filters["rarity_letter"] = rarity_letter
 templates.env.filters["pad_collector_number"] = pad_collector_number
-templates.env.filters["color_class"] = color_class
 # Cache-bust /static/style.css by its mtime, so an edit is picked up on the
 # next request instead of serving whatever the browser cached previously.
 templates.env.globals["static_version"] = int(
