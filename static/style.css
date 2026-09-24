@@ -33,11 +33,11 @@ body.has-card-art::after {
   transition: background-color 0.3s ease;
 }
 html[data-theme="dark"] body.has-card-art::after {
-  background: rgba(10, 10, 14, 0.55);
+  background: rgba(101, 101, 142, 0.55);
 }
 @media (prefers-color-scheme: dark) {
   html:not([data-theme="light"]) body.has-card-art::after {
-    background: rgba(10, 10, 14, 0.55);
+    background: rgba(142, 142, 206, 0.55);
   }
 }
 
@@ -61,7 +61,7 @@ html[data-theme="dark"] body.has-card-art::after {
 }
 .card-tile:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 16px rgba(181, 40, 40, 0.25);
 }
 .card-tile img {
   width: 100%;
