@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://127.0.0.1:8010/cards/d060d95f-f33a-4fc0-b002-c394d4cd82ce)",
+      "Bash(curl -s \"http://127.0.0.1:8010/search?q=Grizzly%20Bears\")",
+      "Bash(curl -s http://127.0.0.1:8010/cards/6090e321-94c3-4755-b01e-121ea1828fbd)",
+      "Bash(curl -s \"http://127.0.0.1:8010/static/style.css?v=1\")",
+      "Bash(curl -s \"http://127.0.0.1:8010/search?q=Sheltered%20Thicket\")",
+      "Bash(curl -s http://127.0.0.1:8010/cards/8d2f3838-26b8-41ad-af75-75c269f79a2c)",
+      "Bash(curl -s \"http://127.0.0.1:8010/search?q=Alesha%2C%20Who%20Smiles%20at%20Death\")",
+      "Bash(curl -s http://127.0.0.1:8010/cards/7ae9ff8c-1cc8-4b10-9641-2c79648fd6c2)",
+      "Bash(python -c ' *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(curl -s http://127.0.0.1:8010/)",
+      "Bash(curl -s http://127.0.0.1:8010/collection)"
+    ]
+  }
+}

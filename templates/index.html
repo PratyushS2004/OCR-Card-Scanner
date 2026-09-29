@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Search</h1>
+<form hx-get="/search" hx-target="#results" hx-push-url="true">
+  <fieldset role="group">
+    <input type="search" name="q" value="{{ query }}" placeholder="Card name..." autofocus>
+    <button type="submit">Search</button>
+  </fieldset>
+</form>
+<div id="results">
+  {% include "_results.html" %}
+</div>
+{% endblock %}

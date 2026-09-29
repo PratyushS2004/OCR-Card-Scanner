@@ -1,0 +1,19 @@
+{% if offline %}
+<p class="offline-notice">You're offline - connect to wifi to look up new cards.</p>
+{% elif query and not results %}
+<p class="muted">No matches for "{{ query }}".</p>
+{% elif results %}
+<div class="card-grid">
+  {% for c in results %}
+  <a class="card-tile" href="/cards/{{ c.id }}">
+    {% if c.image_uri %}<img src="{{ c.image_uri }}" alt="{{ c.name }}">{% endif %}
+    <div class="card-tile-info">
+      <strong>{{ c.name }}</strong>
+      <small>{{ c.set_name }} ({{ (c.set_code or "")|upper }}) #{{ c.collector_number }}</small>
+      <small>{{ c.rarity }}</small>
+      <span class="card-tile-price">{{ "$%.2f"|format(c.price_usd|float) if c.price_usd else "price unknown" }}</span>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% endif %}

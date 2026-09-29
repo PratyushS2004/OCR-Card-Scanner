@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ card.name if card else "Card" }} - OCR Card Scanner{% endblock %}
+{% block body_class %}{% if card and card.image_uri %}has-card-art{% endif %}{% endblock %}
+{% block body_style %}{% if card and card.image_uri %}--card-art-url: url('{{ card.image_uri }}'){% endif %}{% endblock %}
+{% block content %}
+{% if offline %}
+<p class="offline-notice">You're offline - connect to wifi to look up new cards.</p>
+{% else %}
+<article class="card-detail">
+  <div class="card-detail-image">
+    {% if card.image_uri %}<img src="{{ card.image_uri }}" alt="{{ card.name }}">{% endif %}
+    {% if card.artist or card.scryfall_uri %}
+    <p class="card-credit">
+      {% if card.artist %}Illustrated by {{ card.artist }}{% endif %}
+      {% if card.artist and card.scryfall_uri %} &middot; {% endif %}
+      {% if card.scryfall_uri %}<a href="{{ card.scryfall_uri }}" target="_blank" rel="noopener">View on Scryfall</a>{% endif %}
+    </p>
+    {% endif %}
+  </div>
+  <div class="card-detail-info">
+    <h1>{{ card.name }}</h1>
+    <p class="card-meta">{{ card.rarity|rarity_letter }} {{ card.collector_number|pad_collector_number }} &middot; {{ (card.set_code or "")|upper }} &middot; {{ (card.lang or "en")|upper }}</p>
+    <p class="card-typeline">
+      {{ card.mana_cost|mana_symbols }} - {{ card.type_line }}
+      {% if card.power is not none and card.toughness is not none %}
+        <span class="card-pt">{{ card.power }}/{{ card.toughness }}</span>
+      {% elif card.loyalty is not none %}
+        <span class="card-pt">Loyalty: {{ card.loyalty }}</span>
+      {% endif %}
+    </p>
+    <p class="oracle-text">{{ card.oracle_text|strip_reminder_text|mana_symbols }}</p>
+    <div class="price-pills">
+      <span class="price-pill"><small>USD</small>{{ "$%.2f"|format(card.usd) if card.usd is not none else "n/a" }}</span>
+      <span class="price-pill"><small>Foil</small>{{ "$%.2f"|format(card.usd_foil) if card.usd_foil is not none else "n/a" }}</span>
+      <span class="price-pill"><small>Etched</small>{{ "$%.2f"|format(card.usd_etched) if card.usd_etched is not none else "n/a" }}</span>
+    </div>
+    <form method="post" action="/collection">
+      <input type="hidden" name="card_id" value="{{ card.id }}">
+      <div class="grid">
+        <label>Quantity <input type="number" name="quantity" value="1" min="1"></label>
+        <label>Finish
+          <select name="finish">
+            <option value="nonfoil">Nonfoil</option>
+            <option value="foil">Foil</option>
+            <option value="etched">Etched</option>
+          </select>
+        </label>
+        <label>Condition <input type="text" name="condition" placeholder="e.g. NM"></label>
+      </div>
+      <button type="submit">Add to collection</button>
+    </form>
+  </div>
+</article>
+{% endif %}
+{% endblock %}

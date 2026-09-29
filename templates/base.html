@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}OCR Card Scanner{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="/static/style.css?v={{ static_version }}">
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <script>
+    (function () {
+      var stored = null;
+      try { stored = localStorage.getItem("theme"); } catch (e) {}
+      if (stored) document.documentElement.setAttribute("data-theme", stored);
+    })();
+  </script>
+</head>
+<body class="{% block body_class %}{% endblock %}" style="{% block body_style %}{% endblock %}">
+  <nav class="container">
+    <ul><li><strong>OCR Card Scanner</strong></li></ul>
+    <ul>
+      <li><a href="/">Search</a></li>
+      <li><a href="/collection">Collection</a></li>
+      <li><button id="theme-toggle" type="button" class="outline secondary theme-toggle" aria-label="Toggle dark mode">☀️</button></li>
+    </ul>
+  </nav>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById("theme-toggle");
+      function currentTheme() {
+        return root.getAttribute("data-theme") ||
+          (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      }
+      function sync() {
+        var isDark = currentTheme() === "dark";
+        btn.textContent = isDark ? "🌙" : "☀️";
+        btn.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+      }
+      sync();
+      btn.addEventListener("click", function () {
+        var next = currentTheme() === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+        sync();
+      });
+    })();
+  </script>
+</body>
+</html>
