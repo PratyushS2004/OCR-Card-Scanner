@@ -98,6 +98,20 @@ def test_search_with_set_and_collector_number_resolves_exact_printing(monkeypatc
     assert [c["id"] for c in results] == ["exact"]
 
 
+def test_search_footer_only_miss_returns_empty_without_name_search(monkeypatch):
+    def fake_direct(set_code, collector_number):
+        raise service.scryfall.ScryfallError("not found")
+
+    def forbidden(*args):
+        raise AssertionError("empty text must not trigger a name search")
+
+    monkeypatch.setattr(service.scryfall, "get_card_by_set_number", fake_direct)
+    monkeypatch.setattr(service.scryfall, "search_by_query", forbidden)
+    monkeypatch.setattr(service.scryfall, "search_by_name", forbidden)
+
+    assert service.search("", set_code="cmr", collector_number="999999") == []
+
+
 def test_search_falls_back_to_name_when_set_number_not_found(monkeypatch):
     def fake_direct(set_code, collector_number):
         raise service.scryfall.ScryfallError("not found")

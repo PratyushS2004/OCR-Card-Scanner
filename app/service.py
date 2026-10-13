@@ -44,6 +44,11 @@ def search(
         except scryfall.ScryfallError:
             pass  # misread number - fall through to the name search below
 
+    if not text.strip():
+        # Footer-only lookup (no title read yet): nothing to fall back on, and
+        # an empty name search would return an arbitrary slice of the set.
+        return []
+
     if set_code:
         candidates = scryfall.search_by_query(f"set:{set_code} {text}")
         if not candidates:

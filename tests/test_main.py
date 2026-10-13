@@ -193,6 +193,20 @@ def test_api_search_offline_returns_503(client, monkeypatch):
     assert resp.status_code == 503
 
 
+def test_api_search_allows_empty_q_with_set_and_number(client, monkeypatch):
+    monkeypatch.setattr(
+        service.scryfall, "get_card_by_set_number",
+        lambda set_code, collector_number: _card("exact", "Sol Ring"),
+    )
+    resp = client.get("/api/search", params={"set_code": "cmr", "collector_number": "472"})
+    assert [c["id"] for c in resp.json()] == ["exact"]
+
+
+def test_api_search_empty_q_without_number_returns_empty(client):
+    resp = client.get("/api/search", params={"set_code": "cmr"})
+    assert resp.json() == []
+
+
 def test_api_search_passes_set_and_collector_number(client, monkeypatch):
     def fake_direct(set_code, collector_number):
         assert set_code == "cmr"

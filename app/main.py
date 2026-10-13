@@ -209,7 +209,8 @@ def refresh_prices_route(request: Request):
 
 @app.get("/api/search")
 def api_search(q: str = "", set_code: str = "", collector_number: str = ""):
-    if not q.strip():
+    # q may be empty for a footer-only (set + number) lookup, but nothing else.
+    if not q.strip() and not (set_code.strip() and collector_number.strip()):
         return []
     try:
         return service.search(
