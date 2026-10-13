@@ -1,7 +1,14 @@
 __pycache__/
 *.pyc
 *.pyo
+.pytest_cache/
 
 *.jpg
 *.jpeg
 *.png
+
+# Local SQLite database (built by scripts/fake_data.py)
+data/
+
+# Personal working notes, not for the repo
+ROADMAP.md

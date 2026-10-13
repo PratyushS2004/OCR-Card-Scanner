@@ -1,0 +1,76 @@
+{% if refreshed is not none %}
+<p class="flash">Refreshed {{ refreshed }} price{{ "s" if refreshed != 1 else "" }}.</p>
+{% endif %}
+
+<div class="stat-row">
+  <div class="stat-card">
+    <strong>{{ stats.card_count }}</strong>
+    <small>card{{ "s" if stats.card_count != 1 else "" }}</small>
+  </div>
+  <div class="stat-card">
+    <strong>{{ stats.total_quantity }}</strong>
+    <small>cop{{ "ies" if stats.total_quantity != 1 else "y" }}</small>
+  </div>
+  <div class="stat-card">
+    <strong>${{ "%.2f"|format(total) }}</strong>
+    <small>total value</small>
+  </div>
+  {% if stats.unknown_price_count %}
+  <div class="stat-card stat-card-warn">
+    <strong>{{ stats.unknown_price_count }}</strong>
+    <small>unknown price</small>
+  </div>
+  {% endif %}
+</div>
+
+<div class="toolbar">
+  <button hx-post="/refresh-prices" hx-target="#collection" hx-swap="innerHTML">Refresh prices</button>
+  {% if last_refresh_at %}
+  <small class="muted">Last refreshed {{ last_refresh_at }}</small>
+  {% endif %}
+</div>
+
+{% if not rows %}
+<p class="muted">No cards in your collection yet. <a href="/">Search for a card</a> to add one.</p>
+{% else %}
+<table>
+  <thead>
+    <tr>
+      <th>Card</th><th>Set</th><th>Finish</th><th>Condition</th>
+      <th>Qty</th><th>Unit</th><th>Value</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <td><a href="/cards/{{ row.card_id }}">{{ row.name }}</a></td>
+      <td>{{ (row.set_code or "")|upper }} #{{ row.collector_number }}</td>
+      <td>{{ row.finish }}</td>
+      <td>{{ row.condition }}</td>
+      <td>
+        <div class="qty-stepper">
+          <button type="button" class="outline"
+                  hx-post="/collection/{{ row.id }}"
+                  hx-vals='{"quantity": {{ row.quantity - 1 }}}'
+                  hx-target="#collection" hx-swap="innerHTML"
+                  {% if row.quantity <= 1 %}disabled{% endif %}>-</button>
+          <span class="qty-value">{{ row.quantity }}</span>
+          <button type="button" class="outline"
+                  hx-post="/collection/{{ row.id }}"
+                  hx-vals='{"quantity": {{ row.quantity + 1 }}}'
+                  hx-target="#collection" hx-swap="innerHTML">+</button>
+        </div>
+      </td>
+      <td>{{ "$%.2f"|format(row.unit_price) if row.unit_price is not none else "n/a" }}</td>
+      <td>{{ "$%.2f"|format(row.line_value) if row.line_value is not none else "n/a" }}</td>
+      <td>
+        <button type="button" class="secondary outline"
+                hx-post="/collection/{{ row.id }}/delete"
+                hx-confirm="Remove {{ row.quantity }}x {{ row.name }} ({{ row.finish }}) from your collection?"
+                hx-target="#collection" hx-swap="innerHTML">Remove</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
